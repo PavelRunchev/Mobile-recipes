@@ -1,0 +1,4 @@
+.admin-navbar a,
+.admin a i {
+    color: hsl(45, 99%, 61%) !important;
+}

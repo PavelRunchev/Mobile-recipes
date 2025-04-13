@@ -1,0 +1,46 @@
+
+.log-in-logo-image {
+  display: block;
+  width: 150px;
+  margin: 0px auto;
+}
+
+.log-in-btn-container,
+.other-login-container {
+  background-color: hsla(174, 84%, 32%, 0.15) !important;
+}
+
+.other-account-btn-log-in {
+  background-color: hsl(180, 0%, 100%);
+}
+
+
+.other-login-container {
+  display: grid;
+  grid-template-rows: 60px 60px;
+  grid-gap: 5px;
+  justify-items: center;
+  align-items: center;
+  padding-bottom: 40px;
+}
+
+.other-account-login {
+  color: hsl(240, 0%, 45%);
+}
+
+.forgot-password-image {
+    width: 30px;
+    border-radius: 50%;
+    margin: 0px 10px;
+}
+
+.forgot-password-link {
+  text-decoration: none !important;
+  outline: none !important;
+  color: hsl(0, 0%, 0%);
+}
+
+.forgot-password-link:hover,
+.forgot-password-link:active {
+  color: hsl(174, 84%, 32%) !important;
+}

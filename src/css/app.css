@@ -1,0 +1,130 @@
+/* iOS Cordova Tweak */
+.device-cordova.device-ios {
+  height: 100vh;
+}
+
+/* Your app custom styles here */
+.flex-center-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.flex-around-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+
+.global-color {
+  color: hsl(174, 84%, 32%) !important;
+}
+
+.second-color {
+  color: hsl(211, 76%, 57%) !important;
+}
+
+.color-black {
+  color: hsl(200, 34%, 15%) !important
+}
+
+.color-white {
+  color: hsl(0, 0%, 97%) !important; 
+}
+
+.admin-color {
+  color: hsl(45, 99%, 61%) !important;
+  text-decoration: underline;
+}
+
+.background-color-teal {
+  background-color: rgba(13, 150, 136, 0.10) !important;
+  border-radius: 5px;
+}
+
+.background-color-white {
+  background-color: hsl(0, 0%, 97%) !important;
+}
+
+.color-bg-white {
+  background-color: white;
+}
+
+.global-underline {
+  text-decoration: underline !important;
+}
+
+.ul {
+  list-style-type: none !important;
+}
+
+.global-bold {
+  font-weight: bold;
+}
+
+select,
+select > option {
+  padding: 0px 10px !important;
+  background-color: hsla(174, 84%, 32%, 0.15) !important;
+}
+
+.tablink-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.tablink-container:target,
+.tablink-container:active {
+  color: hsl(174, 84%, 32%) !important;
+}
+
+.tablink-title {
+  font-size: 14px;
+  text-transform: capitalize;
+  font-weight: 400;
+  color: hsl(240, 0%, 55%);
+}
+
+.tablink-title:focus,
+.tablink-title:target {
+  color: hsl(174, 84%, 32%) !important;
+}
+
+.tablink-title:not(:focus) {
+  color: hsl(240, 0%, 55%);
+}
+
+.text-decoration-none {
+  cursor: pointer;
+  text-decoration: none !important;
+}
+
+.main-icon-recipes {
+  margin: 0px 10px 5px 20px;
+}
+
+.main-recipes-title {
+  font-weight: 400 !important;
+}
+
+/* page not found image */
+.page-not-found-image {
+  display: block;
+  width: 35%;
+  height: auto;
+  margin: 0px auto;
+}
+
+/* recipe details comments container */
+.messages {
+  background-color: rgba(13, 150, 136, 0.10) !important;
+}
+
+.popup-close span {
+  color: hsl(174, 84%, 32%) !important;
+}
+

@@ -1,0 +1,108 @@
+
+
+.recipe-my-model-list-item {
+    text-decoration: none !important;
+    -webkit-box-shadow: 0px 0px 7px 0px rgba(0,0,0,0.35);
+    -moz-box-shadow: 0px 0px 7px 0px rgba(0,0,0,0.35);
+    box-shadow: 0px 0px 7px 0px rgba(0,0,0,0.35);
+    margin: 20px 10px;
+    border-radius: 5px;
+    list-style-type: none !important;
+}
+
+.recipe-my-model-list-item .item-content {
+    padding-left: 6px;
+}
+
+.recipe-my-model-list-item .item-inner {
+    width: 100%;
+    display: flex;
+    flex-direction: column !important;
+    flex-wrap: wrap !important;
+    flex-flow: wrap;
+}
+
+.recipe-my-model-header {
+    width: 100%;
+    padding: 0px 0px 5px 5px;
+}
+
+.recipe-my-model-list-item > .item-link {
+    width: 100%;
+}
+
+.recipe-my-model-list-item > .item-link .item-inner {
+   display: flex;
+   width: 100% !important;
+   padding-right: 15px;
+}
+
+.recipe-my-model-content-container {
+    width: 100% !important;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 200px;
+}
+
+.recipe-my-model-title-container {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.recipe-my-model-title {
+    font-size: 16px;
+    font-weight: 500;
+}
+
+
+.recipe-my-model-content {
+    width: 100%;
+    display: flex;
+    overflow: hidden;
+}
+
+.lazy-load-image-background {
+    min-width: 120px !important;
+    overflow: hidden;
+    border-top-right-radius: 5px !important;
+    border-top-left-radius: 5px !important;
+    border-bottom-right-radius: 5px !important;
+    border-bottom-left-radius: 5px !important;
+    /* -webkit-box-shadow: 0px 0px 7px 0px rgba(0,0,0,0.35) !important;
+    -moz-box-shadow: 0px 0px 7px 0px rgba(0,0,0,0.35) !important;
+    box-shadow: 0px 0px 7px 0px rgba(0,0,0,0.35) !important; */
+}
+
+.recipe-my-model-list-item-image {
+    width: 120px;
+    height: 100px;
+    border-radius: 5px !important;
+    -webkit-box-shadow: 0px 0px 7px 0px rgba(0,0,0,0.35) !important;
+    -moz-box-shadow: 0px 0px 7px 0px rgba(0,0,0,0.35) !important;
+    box-shadow: 0px 0px 7px 0px rgba(0,0,0,0.35) !important;
+    margin-right: 15px;
+    overflow: hidden;
+    border-top-right-radius: 5px !important;
+    border-top-left-radius: 5px !important;
+    border-bottom-right-radius: 5px !important;
+    border-bottom-left-radius: 5px !important;
+}
+
+.recipe-my-model-content-instructions {
+    width: 100%;
+    font-size: 12px;
+    padding-left: 10px;
+    vertical-align: middle;
+    text-align: left;
+    display: flex;
+    flex-grow: 3;
+}
+
+.recipe-my-model-footer-container {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+

@@ -1,0 +1,18 @@
+.background-teal-opacity-2 {
+    background-color: rgba(13, 150, 136, 0.08) !important;
+}
+
+.category-list-item {
+    position: relative !important;
+    z-index: 1 !important;
+    list-style: none !important;
+    list-style-type: none !important;
+}
+  
+.category-trash-btn {
+    cursor: pointer !important;
+    position: absolute !important;
+    top: 5px;
+    right: 30px;
+    z-index: 100 !important;
+}

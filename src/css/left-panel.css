@@ -1,0 +1,28 @@
+
+
+.left-panel-title {
+    text-decoration: underline !important;
+}
+
+a {
+    text-decoration: none !important;
+}
+
+.left-panel-icon-framework-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    padding: 0px 65px 0px 5px;
+}
+
+.hr-tag {
+    width: 200px;
+    margin: 10px 0px 0px 15px;
+}
+
+.left-panel-image-logo{
+
+    width: 150px;
+    height: 110px;
+    margin-top: 15px;
+}

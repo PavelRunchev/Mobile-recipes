@@ -1,9 +1,23 @@
 
-.update-background-color,
-select,
+
 #update-form-select {
     cursor: pointer !important;
-    background-color: hsla(45, 99%, 61%, 0.10) !important;
+}
+
+#update-form-select select,
+#update-recipe-ingredient-select select {
+    color: black !important;
+    background-color: hsla(45, 99%, 61%, 0.30) !important;
+}
+
+#update-form-select select option,
+#update-recipe-ingredient-select select option {
+    color: black !important;
+    background-color: hsla(45, 99%, 61%, 0.30) !important;
+}
+
+#update-form-select .item-label {
+    color: black !important;
 }
 
 select > option,
@@ -11,7 +25,7 @@ select > option:target,
 select > option:focus,
 select > option:hover {
     cursor: pointer !important;
-    background-color: white !important;
+    background-color: hsla(45, 99%, 61%, 0.10);
 }
 
 

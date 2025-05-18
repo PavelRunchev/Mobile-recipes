@@ -48,6 +48,22 @@ export const getAllUsers = () => {
     });
 };
 
+export const getAllAuthUsers = () => {
+    return new Promise((resolve, reject) => {
+        get(ref(database, 'users'))
+            .then((data) => {
+                if(data.exists()) {
+                    const availableUsers = Object.values(data.val()).map(u => { 
+                        return { email: u.email, username: u.username, gender: u.gender, roles: u.roles, id: u.id, userUID: u.userUID }; 
+                    });
+
+                    resolve(availableUsers);
+                    reject();
+                }
+        });
+    });
+};
+
 export const removeUserFromDB = (id) => {
     return new Promise(function(resolve, reject) {
         remove(ref(database, "/users/" + id))

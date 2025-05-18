@@ -18,8 +18,9 @@
   justify-content: space-around;
 }
 
-.global-color {
-  color: hsl(174, 84%, 32%) !important;
+.global-color,
+.color-blue {
+  color: hsl(206, 85%, 54%) !important;
 }
 
 .second-color {
@@ -27,11 +28,15 @@
 }
 
 .color-black {
-  color: hsl(200, 34%, 15%) !important
+  color: hsl(200, 34%, 15%) !important;
 }
 
 .color-white {
   color: hsl(0, 0%, 97%) !important; 
+}
+
+.color-yellow {
+  color: hsl(45, 99%, 61%) !important;
 }
 
 .admin-color {
@@ -39,13 +44,20 @@
   text-decoration: underline;
 }
 
-.background-color-teal {
-  background-color: rgba(13, 150, 136, 0.10) !important;
-  border-radius: 5px;
+.background-color-blue {
+  background-color: hsla(206, 85%, 54%, 0.10) !important;
 }
 
 .background-color-white {
   background-color: hsl(0, 0%, 97%) !important;
+}
+
+.background-color-yellow { 
+  background-color: hsla(45, 99%, 61%, 0.10) !important;
+}
+
+.background-color-yellow-2 { 
+  background-color: hsla(45, 99%, 61%, 100%) !important;
 }
 
 .color-bg-white {
@@ -56,18 +68,16 @@
   text-decoration: underline !important;
 }
 
+.underline-none {
+  text-decoration: none !important;
+}
+
 .ul {
   list-style-type: none !important;
 }
 
 .global-bold {
   font-weight: bold;
-}
-
-select,
-select > option {
-  padding: 0px 10px !important;
-  background-color: hsla(174, 84%, 32%, 0.15) !important;
 }
 
 .tablink-container {
@@ -79,7 +89,7 @@ select > option {
 
 .tablink-container:target,
 .tablink-container:active {
-  color: hsl(174, 84%, 32%) !important;
+  color: hsl(206, 85%, 54%) !important;
 }
 
 .tablink-title {
@@ -91,7 +101,7 @@ select > option {
 
 .tablink-title:focus,
 .tablink-title:target {
-  color: hsl(174, 84%, 32%) !important;
+  color: hsl(206, 85%, 54%) !important;
 }
 
 .tablink-title:not(:focus) {
@@ -119,12 +129,29 @@ select > option {
   margin: 0px auto;
 }
 
-/* recipe details comments container */
-.messages {
-  background-color: rgba(13, 150, 136, 0.10) !important;
-}
+
 
 .popup-close span {
-  color: hsl(174, 84%, 32%) !important;
+  color: hsl(206, 85%, 54%) !important;
+}
+
+
+.youtube-player #video {
+  width: 100%;
+  height: 350px;
+}
+
+.forgot-password-logo-image {
+  max-width: 100%;
+  display: block;
+  margin: 0px auto;
+}
+
+.main-logo-image {
+  display: inline-block;
+  width: 50px;
+  height: auto;
+  margin-right: 10px;
+  border-radius: 50%;
 }
 

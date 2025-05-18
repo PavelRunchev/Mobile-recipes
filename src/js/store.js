@@ -133,10 +133,11 @@ const store = createStore({
       state.recipes = [...recipes];
     },
 
-    addRecipe({ state }, recipe) {
+    addRecipe({ state, dispatch }, recipe) {
       if(state.recipes == null)
         state.recipes = [];
       state.recipes = [...state.recipes, ...[recipe]];
+      dispatch('updateRecipeInAllRecipes', recipe);
     },
 
     setCurrentRecipe({ state, dispatch }, recipe) {

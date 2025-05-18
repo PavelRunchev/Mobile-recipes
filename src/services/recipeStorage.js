@@ -15,6 +15,8 @@ export const setRecipeImageToStorage = (image) => {
 }
 
 
+
+
 export const checkCurrentImageInUsedToStorage = (image) => {
     return new Promise(function(resolve, reject) {
         listAll(ref(storage, '/recipes/')).then(data => {
@@ -50,6 +52,24 @@ export const removeImageFromStorage = (recipeImages) => {
             console.log(error.messages);
             reject(error);
         }
+    });
+}
+
+export const uploadRecipeImageFromCameraToStorage = (image) => {
+    return new Promise(function(resolve, reject) {
+
+            if(!image.hasOwnProperty('type')) {
+                image.type = 'image/jpeg';
+            }
+            const type = image.type.split('/')[1];
+
+            uploadBytes(ref(storage, `/recipes/${image.name}.${type}`), image, { contentType: type })
+                .then((res) => {
+                    getDownloadURL(res.ref)
+                        .then((url) => {  
+                            resolve([url, res.metadata.name, 'Success']);
+                        }).catch(error => reject(error));
+                }).catch(error => reject(error));
     });
 }
 

@@ -5,3 +5,13 @@
     margin: 10px auto;
     border-radius: 5px;
 }
+
+.create-recipe-image-list .item-label {
+    color: black;
+}
+
+select,
+select > option {
+  padding: 0px 10px !important;
+  background-color: hsla(206, 85%, 54%, 0.10) !important;
+}

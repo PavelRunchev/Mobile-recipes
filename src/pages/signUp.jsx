@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import '../css/signUp.css';
 import store from '../js/store';
 
-import { Page, Navbar, List, ListItem, ListInput, LoginScreenTitle, Row, Button, Block, Col, f7, Icon, Checkbox, Toggle, Link } from 'framework7-react';
+import { Page, Navbar, List, ListItem, ListInput, LoginScreenTitle, Row, Button, Block, Col, f7, Icon, Checkbox, Toggle, Link, useStore } from 'framework7-react';
 
 import { auth } from '../firebaseConfig';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
@@ -21,7 +21,7 @@ function SignUpPage() {
 
   //fields
   const [username, setUsername] = useState('');
-  const [isValudUsername, setIsValidUsername] = useState(false);
+  const [isValidUsername, setIsValidUsername] = useState(false);
 
   const [email, setEmail] = useState('');
   const [isValidateEmail, setIsValidateEmail] = useState(false);
@@ -38,7 +38,7 @@ function SignUpPage() {
 
   const [createAccountBrnIsDisabled, setCreateAccountBrnIsDisabled] = useState(true);
   const toast = useRef(null);
-  
+  const isDarkMode = useStore('themeIsDark');
 
   useEffect(() => {
       if(availableUsers.length === 0) {
@@ -47,12 +47,12 @@ function SignUpPage() {
           }).catch(error => console.log(error.message));
       }
 
-      if(isValudUsername && isValidateEmail && isValidatePassword && isValidateRepeatPassword 
+      if(isValidUsername && isValidateEmail && isValidatePassword && isValidateRepeatPassword 
         && gender && agreeTerms && userIsUsed == false && emailIsUsed == false) 
         setCreateAccountBrnIsDisabled(false);
       else 
         setCreateAccountBrnIsDisabled(true);
-  }, [availableUsers, isValudUsername, isValidateEmail, isValidatePassword, isValidateRepeatPassword, gender, agreeTerms, userIsUsed, emailIsUsed]);
+  }, [availableUsers, isValidUsername, isValidateEmail, isValidatePassword, isValidateRepeatPassword, gender, agreeTerms, userIsUsed, emailIsUsed]);
 
 
   function usernameHandler(e) {
@@ -94,7 +94,7 @@ function SignUpPage() {
       e.preventDefault();
 
       try {
-          if(isValudUsername && isValidateEmail && isValidatePassword && isValidateRepeatPassword 
+          if(isValidUsername && isValidateEmail && isValidatePassword && isValidateRepeatPassword 
             && gender && agreeTerms && userIsUsed == false && emailIsUsed == false) {
               f7.preloader.show();
               const credential = await createUserWithEmailAndPassword(auth, email, password);
@@ -183,13 +183,15 @@ function SignUpPage() {
       setGender('Male');
   }
 
+
+
   return (
-      <Page name='sign-up' >
-          <Navbar title='Sign Up' className='global-color' />
+      <Page name='sign-up'>
+          <Navbar title='Sign Up' className={`${isDarkMode ? 'text-color-white' : 'global-color'}`} />
 
           <div className='block margin-top mb-5 '></div>
-          <LoginScreenTitle className='global-color margin-top mb-1'>Sign Up Form</LoginScreenTitle>
-          <img src={signUp} className='log-in-logo-image lazy lazy-fade-in'/>
+          <LoginScreenTitle className={`margin-top ${isDarkMode ? 'text-color-white' : 'global-color'}`}>Sign Up Form</LoginScreenTitle>
+          <img src={signUp} className='sign-up-logo-image lazy lazy-fade-in'/>
 
           <List strongIos outlineIos dividersIos form formStoreData id='sign-up-form'>
               <ListInput 
@@ -198,7 +200,7 @@ function SignUpPage() {
                   name='username' 
                   type='text' 
                   placeholder='Your username' 
-                  color='teal'
+                  color='blue'
                   validate
                   info='Enter at least 2 characters!'
                   value={username}
@@ -206,7 +208,7 @@ function SignUpPage() {
                   errorMessage='This username is used!'
                   errorMessageForce={userIsUsed ? true : false}
               >
-                  {isValudUsername && <Icon icon='checkmark' material='checkmark' f7='checkmark' slot='media' color='teal' className='check-validate-input'/>}
+                  {isValidUsername && !userIsUsed && <Icon icon='checkmark' material='checkmark' f7='checkmark' slot='media' color='blue' className='check-validate-input'/>}
               </ListInput>
 
               <ListInput
@@ -216,13 +218,13 @@ function SignUpPage() {
                   placeholder='Your e-mail'
                   info='Enter valid email!'
                   validate
-                  color='teal'
+                  color='blue'
                   className='no-margin input-field'
                   value={email}
                   errorMessage='This email is used!'
                   errorMessageForce={emailIsUsed ? true : false}
               >
-                  {isValidateEmail && <Icon icon='checkmark' material='checkmark' f7='checkmark' slot='media' color='teal' className='check-validate-input'/>}
+                  {isValidateEmail && !emailIsUsed && <Icon icon='checkmark' material='checkmark' f7='checkmark' slot='media' color='blue' className='check-validate-input'/>}
               </ListInput>
 
               <ListInput
@@ -231,13 +233,13 @@ function SignUpPage() {
                   name='password'
                   type='password'
                   placeholder='Your password'
-                  color='teal'
+                  color='blue'
                   validate
                   info='Enter at least 8 symbols!'
                   className='no-margin input-field'
                   value={password}
               >
-                  {isValidatePassword && <Icon icon='checkmark' material='checkmark' f7='checkmark' slot='media' color='teal' className='check-validate-input'/>}
+                  {isValidatePassword && <Icon icon='checkmark' material='checkmark' f7='checkmark' slot='media' color='blue' className='check-validate-input'/>}
               </ListInput>
                     
               <ListInput
@@ -246,43 +248,45 @@ function SignUpPage() {
                   name='repeatpassword'
                   type='password'
                   placeholder='Repeat your password'
-                  color='teal'
+                  color='blue'
                   info='Enter same password!'
                   className='no-margin input-field'
                   value={repeatPassword}
               >
-                  {isValidateRepeatPassword && <Icon icon='checkmark' material='checkmark' f7='checkmark' slot='media' color='teal' className='check-validate-input'/>}
+                  {isValidateRepeatPassword && <Icon icon='checkmark' material='checkmark' f7='checkmark' slot='media' color='blue' className='check-validate-input'/>}
               </ListInput>
 
-              <ListItem className='background-teal-opacity-2'>
+              <ListItem className={`${isDarkMode ? 'background-color-white' : 'background-color-blue'}`}>
                   <div className='show-hide-password-container'>
 
                       <span className='global-color text-align-center'>Show / hide passwords</span>
 
                       {showPassword 
-                          ? <Icon icon='eye' material='eye' f7='eye' color='teal' className='show-password-icon'/> 
-                          : <Icon icon='eye_slash' material='eye_slash' f7='eye_slash' color='teal' className='show-password-icon'/>
+                          ? <Icon icon='eye' material='eye' f7='eye' color='blue' className='show-password-icon'/> 
+                          : <Icon icon='eye_slash' material='eye_slash' f7='eye_slash' color='blue' className='show-password-icon'/>
                       }
 
-                      <Toggle  onChange={showHideTouchPasswords} onTouchStart={showHideTouchPasswords} className='no-fastclick' defaultChecked color='teal' />
+                      <Toggle  onChange={showHideTouchPasswords} onTouchStart={showHideTouchPasswords} className='no-fastclick' defaultChecked color='blue' />
                   </div>
               </ListItem>
                    
-              <ListInput onChange={genderHandler} label='Gender' type='select' name='gender' placeholder='Please choose...' color='teal' >
-                  <option value='Male'>Male</option>
+              <ListInput onChange={genderHandler} label='Gender' type='select' name='gender' placeholder='Please choose...' color='blue' className='sign-up-select-gender'>
+                  <option value='Male' >Male</option>
                   <option value='Female'>Female</option>
               </ListInput>
                   
               <Block className='display-flex justify-content-center align-content-center align-items-center'>
-                  <Checkbox checked={agreeTerms} onChange={agreeTermsHandler}  name='checkbox-1' color='teal' className='margin-right'></Checkbox>
-                  <span className='color-teal'> I have read and agree to the terms!</span>
+                  <Checkbox checked={agreeTerms} onChange={agreeTermsHandler}  name='checkbox-1' color='blue' className='margin-right'></Checkbox>
+                  <span className={`${isDarkMode ? 'color-white' : 'color-black'}`}> I have read and agree to the terms!</span>
               </Block>
           </List>
 
-          <Block strong className='background-teal-opacity-2'>
+          <Block strong className={`${isDarkMode ? 'background-color-white' : 'background-color-blue'}`}>
               <Row className='flex-center-container'>
                   <Col width='50'>
-                      <Button onClick={signUpHandler} disabled={createAccountBrnIsDisabled} fill raised color='teal'>Create Accaunt</Button>
+                      <Button onClick={signUpHandler} onTouchStart={signUpHandler} disabled={createAccountBrnIsDisabled} fill raised color='blue'>
+                        <span className='color-white'>Create Accaunt</span>
+                      </Button>
                   </Col>
               </Row>
           </Block>

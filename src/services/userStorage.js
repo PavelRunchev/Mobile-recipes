@@ -16,13 +16,14 @@ export const uploadUserAvatarFileToStorage = (image) => {
 
 export const uploadUserAvatarFromCameraToStorage = (image, userUID) => {
     return new Promise(function(resolve, reject) {
-        const type = image.type.split('/')[1];
-        uploadBytes(ref(storage, `/avatars/avatar-${userUID}.${type}`), image)
-            .then((res) => {
-                getDownloadURL(res.ref)
-                    .then((url) => {  
-                        resolve([url, res.metadata.name]);
-                    }).catch(error => reject(error));
-            }).catch(error => reject(error));
+
+            const type = image.type.split('/')[1];
+            uploadBytes(ref(storage, `/avatars/avatar-${userUID}.${type}`), image, { contentType: type || 'image/jpeg' })
+                .then((res) => {
+                    getDownloadURL(res.ref)
+                        .then((url) => {  
+                            resolve([url, res.metadata.name]);
+                        }).catch(error => reject(error));
+                }).catch(error => reject(error));
     });
 }

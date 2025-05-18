@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import '../css/logIn.css';
-import { Col, Page, Navbar, List, Link, ListInput, LoginScreenTitle, Row, Button, Block, f7 } from 'framework7-react';
+import { Col, Page, Navbar, List, Link, ListInput, LoginScreenTitle, Row, Button, Block, f7, useStore } from 'framework7-react';
 import store from '../js/store';
 
 import { auth } from './../firebaseConfig';
@@ -8,9 +8,9 @@ import {
   signInWithEmailAndPassword, 
   GoogleAuthProvider, 
   FacebookAuthProvider, 
-  signInWithPopup, 
   GithubAuthProvider,
-  TwitterAuthProvider
+  TwitterAuthProvider,
+  signInWithRedirect
 } from 'firebase/auth';
 
 import { getAuthUserFromRealtimeDB } from '../services/userServices';
@@ -33,6 +33,7 @@ function LogInPage() {
 
     const [btnIsDisabled, setBtnIsDisabled] = useState(true);
     const toast = useRef(null);
+    const isDarkMode = useStore('themeIsDark');
 
     useEffect(() => {
         if(emailIsValid && passwordIsValid)
@@ -85,7 +86,7 @@ function LogInPage() {
                     const authUser = Object.assign({}, user, getUserFromDB);
                     store.dispatch('addCredentialUser', authUser);
 
-                    toast.current = f7.toast.create({ text: 'User logged in successfully!', position: 'top', cssClass: 'text-success', closeTimeout: 4000 });
+                    toast.current = f7.toast.create({ text: 'User logged in successfully!', position: 'top', cssClass: 'text-primary', closeTimeout: 4000 });
                     toast.current.open();
                     f7.tab.show('#view-home');
                     //clear all fields
@@ -127,16 +128,17 @@ function LogInPage() {
 
             f7.preloader.hide();
         }
-  }
+    }
 
     async function logInWithGoogle(e) {
         try {
             const provider = new GoogleAuthProvider();
             
-            const res = await signInWithPopup(auth, provider);
-            toast.current = f7.toast.create({ text: 'User logged in successfully!', position: 'top', cssClass: 'text-success', closeTimeout: 4000 });
+            const res = await signInWithRedirect(auth, provider);
+            toast.current = f7.toast.create({ text: 'User logged in successfully!', position: 'top', cssClass: 'text-primary', closeTimeout: 4000 });
             toast.current.open();
             const authUser = getAnonymousUser(res);
+            console.log(authUser);
             store.dispatch('addCredentialUser', authUser);
             f7.tab.show('#view-home');
         } catch(error) {
@@ -148,8 +150,8 @@ function LogInPage() {
         try {
             const provider = new FacebookAuthProvider();
                 
-            const res = await signInWithPopup(auth, provider);
-            toast.current = f7.toast.create({ text: 'User logged in successfully!', position: 'top', cssClass: 'text-success', closeTimeout: 4000 });
+            const res = await signInWithRedirect(auth, provider);
+            toast.current = f7.toast.create({ text: 'User logged in successfully!', position: 'top', cssClass: 'text-primary', closeTimeout: 4000 });
             toast.current.open();
             const authUser = getAnonymousUser(res);
             store.dispatch('addCredentialUser', authUser);
@@ -163,8 +165,8 @@ function LogInPage() {
         try {
             const provider = new GithubAuthProvider();
             
-            const res = await signInWithPopup(auth, provider);
-            toast.current = f7.toast.create({ text: 'User logged in successfully!', position: 'top', cssClass: 'text-success', closeTimeout: 4000 });
+            const res = await signInWithRedirect(auth, provider);
+            toast.current = f7.toast.create({ text: 'User logged in successfully!', position: 'top', cssClass: 'text-primary', closeTimeout: 4000 });
             toast.current.open();
             const authUser = getAnonymousUser(res);
             store.dispatch('addCredentialUser', authUser);
@@ -178,8 +180,8 @@ function LogInPage() {
         try {
             const provider = new TwitterAuthProvider();
             
-            const res = await signInWithPopup(auth, provider);
-            toast.current = f7.toast.create({ text: 'User logged in successfully!', position: 'top', cssClass: 'text-success', closeTimeout: 4000 });
+            const res = await signInWithRedirect(auth, provider);
+            toast.current = f7.toast.create({ text: 'User logged in successfully!', position: 'top', cssClass: 'text-primary', closeTimeout: 4000 });
             toast.current.open();
             const authUser = getAnonymousUser(res);
             store.dispatch('addCredentialUser', authUser);
@@ -201,12 +203,12 @@ function LogInPage() {
   }
 
   return (
-      <Page name='log-in' >
-          <Navbar title='Log In' className='global-color'/>
+      <Page name='log-in'>
+          <Navbar title='Log In' className={`${isDarkMode ? 'text-color-white' : 'global-color'}`}/>
 
           <div className='block margin-top mb-5 '></div>
           <div className='log-in-container'>
-              <LoginScreenTitle className='global-color'>Log In Form</LoginScreenTitle>
+              <LoginScreenTitle className={`${isDarkMode ? 'text-color-white' : 'global-color'}`}>Log In Form</LoginScreenTitle>
               <img src={loginImage} className='log-in-logo-image lazy lazy-fade-in'/>
 
 
@@ -218,7 +220,7 @@ function LogInPage() {
                       placeholder='Your e-mail'
                       info='Enter email!'
                       validate
-                      color='teal'
+                      color='blue'
                       className='no-margin input-field'
                       value={email}
                       errorMessage='This email is invalid format!'
@@ -232,7 +234,7 @@ function LogInPage() {
                       name='password'
                       type='password'
                       placeholder='Your password'
-                      color='teal'
+                      color='blue'
                       validate
                       info='Enter at least 8 symbols!'
                       className='no-margin input-field'
@@ -247,20 +249,22 @@ function LogInPage() {
               
               
 
-              <Block strong className='log-in-btn-container'>
+              <Block strong className={`${isDarkMode ? 'background-color-white' : 'background-color-blue'}`}>
                   <Row className='flex-center-container'>
                       <Col width='50'>
-                          <Button onClick={signInHandler} disabled={btnIsDisabled} fill raised color='teal'>Log In</Button>
+                            <Button onClick={signInHandler} disabled={btnIsDisabled} fill raised color='blue'>
+                                <span className='color-white'>Log In</span>
+                            </Button>
                       </Col>
                   </Row>
               </Block>
 
               <div className='flex-center-container margin-vertical'>
                   <img src={forgottenPassword} className='forgot-password-image'/>
-                  <Link href='/user/forgot-password/' className='forgot-password-link'>Forgot Password</Link>
+                  <Link href='/user/forgot-password/' className={`forgot-password-link ${isDarkMode ? 'text-color-white' : 'text-color-black'}`}>Forgot Password</Link>
               </div>
 
-              <Block strong outlineIos className='other-login-container'>
+              <Block strong outlineIos className={`other-login-container ${isDarkMode ? 'background-color-white' : 'background-color-blue'}`}>
                   <p className='my-0'>Or continue with</p>
                   <p className='col-10'>
                     <Button 
@@ -273,10 +277,11 @@ function LogInPage() {
                       <FaGithub color='black' size={16}/> &nbsp; Continue with Github
                     </Button>
                   </p>
+
                   <p className='col-10'>
                     <Button 
-                        onClick={logInWithGoogle}
-                        onTouchStart={logInWithGoogle}
+                        onClick={logInWithGithub}
+                        onTouchStart={logInWithGithub}
                         raised 
                         color='black' 
                         className='other-account-btn-log-in'
@@ -284,6 +289,7 @@ function LogInPage() {
                       <FaGoogle color='red' size={16}/> &nbsp; Continue with Google
                     </Button>
                   </p>
+                 
                   <p className='col-10'>
                     <Button 
                         onClick={logInWithFacebook}

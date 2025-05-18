@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { getDevice }  from 'framework7/lite-bundle';
+import { Dom7, getDevice }  from 'framework7/lite-bundle';
 import { f7, f7ready, App, Views, View, Toolbar, Link } from 'framework7-react';
 import cordovaApp from '../js/cordova-app';
 
@@ -63,6 +63,8 @@ const MyApp = () => {
 
     useEffect(async () => {
       f7ready(async () => {
+          document.addEventListener("deviceready", () => console.log("Cordova is ready!"), false);
+          
           try {
               const categoriesDB = await getAllCategoriesFromDB();
               if(categoriesDB != undefined) {
@@ -100,13 +102,11 @@ const MyApp = () => {
         });
 
         return unsubscribe;
-    }, []);
+    }, [darkMode]);
 
     function changeDarkMode(e) {
+      store.dispatch('setThemeIsDark', !darkMode);
       darkMode ? setDarkMode(false) : setDarkMode(true);
-      setTimeout(() => {
-        store.dispatch('setThemeIsDark', darkMode);
-      }, 100);
     }
 
     //when click current category from left panel
@@ -118,7 +118,7 @@ const MyApp = () => {
             f7.preloader.show();
             if(user != null) {
                 await signOut(auth);
-                toast.current = f7.toast.create({ text: 'Logout successfully!', position: 'top', cssClass: 'text-success', closeTimeout: 4000 });
+                toast.current = f7.toast.create({ text: 'Logout successfully!', position: 'top', cssClass: 'text-primary', closeTimeout: 4000 });
                 toast.current.open();
             
                 store.dispatch('userLogOut');
@@ -133,11 +133,9 @@ const MyApp = () => {
         }
     }
 
-    console.log(darkMode)
-
   return (
     <ErrorBoundary>
-    <App { ...f7params }  themeDark={darkMode ? true : false}>
+      <App { ...f7params }  themeDark={darkMode ? true : false}>
 
           <LeftPanel getRecipesByCategory={getRecipesByCategory}/>
           {userIsAuth && <RightPanel changeDarkMode={changeDarkMode} logOutHandler={logOutHandler}/>}
@@ -145,9 +143,9 @@ const MyApp = () => {
           <HomePage />
 
           {/* Views/Tabs container */}
-          <Views tabs className="safe-areas" colorTheme='teal'>
+          <Views tabs className="safe-areas" colorTheme='blue'>
             {/* Tabbar for switching views-tabs */}
-            <Toolbar tabbar labels bottom color='teal'>
+            <Toolbar tabbar labels bottom color='blue'>
               <Link tabLink="#view-home" tabLinkActive iconIos="f7:restaurant_menu" iconAurora="f7:restaurant_menu" iconMd="material:restaurant_menu" text="All Recipes" />
               {userIsAdmin(user) && <Link tabLink='#view-categories' iconIos='f7:view_list' iconAurora='f7:view_list' iconMd='material:view_list' text='Categories' />}
               {userIsAuth(user) && <Link tabLink='#view-createRecipe' iconIos='f7:add_circle' iconAurora='f7:add_circle' iconMd='material:add_circle'  text='Create Recipes' />}

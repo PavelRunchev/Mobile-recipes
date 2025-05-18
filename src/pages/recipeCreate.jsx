@@ -7,17 +7,20 @@ import { Page, Navbar, List, ListInput, ListItem, BlockTitle, Row,
 import store from '../js/store';
 import { capitalLetter, NumberPattern, PreparationPattern, imagePattern, VideoIdPattern } from '../services/variable';
 import { userIsAuth } from '../services/userServices';
-import { setRecipeFromDB } from '../services/recipeService';
+import { setRecipeFromDB, getAllRecipesFromDB } from '../services/recipeService';
 import { setRecipeImageToStorage } from '../services/recipeStorage';
 import { GetCurrentDate } from '../services/DateFormat';
 import { ingredientsData, liquidIngredients } from '../services/variable';
 import { GetRandomString } from '../services/generateRandomString';
+import { GrPowerReset } from "react-icons/gr";
 
-import createImage from '../public/create-image.png';
+import createImage from '../public/create-recipe.png';
 
 function RecipeCreatePage() {
   //Sortable all ingredients by ascending order
   const sortableIngredients = ingredientsData.sort((a, b) => a.localeCompare(b));
+
+  const [categoriesRecipe, setCategoriesRecipe] = useState([]);
 
   const [categorySelected, setCategorySelected] = useState('Beef');
   const [recipeName, setRecipeName] = useState('');
@@ -45,6 +48,7 @@ function RecipeCreatePage() {
   const [isValidVideoId, setIsValidVideoId] = useState(true);
 
   //Ingridients
+  const [selectIngredients, setSelectIngredients] = useState([]);
   const [ingredient, setIngredient] = useState(sortableIngredients[0]);
   const [ingredientGrams, setIngredientGrams] = useState(0);
   //array from ingredients (select/optional)
@@ -56,6 +60,7 @@ function RecipeCreatePage() {
   const toast = useRef(null);
   let categories = useStore('categories');
   let user = useStore('authUser');
+  const isDarkMode = useStore('themeIsDark');
 
   useEffect(() => {
     if(isValidRecipeName && recipeName != '' && isValidCalories && calories != '' 
@@ -65,7 +70,13 @@ function RecipeCreatePage() {
     } else {
       setBtnAddRecipeIsEnable(true);
     }
-  }, [recipeName, calories, preparation, instructions, recipeImage]);
+
+    if(categories != undefined)
+      setCategoriesRecipe(categories);
+
+    if(sortableIngredients != undefined)
+      setSelectIngredients(sortableIngredients);
+  }, [categories, categorySelected, recipeName, calories, preparation, cookTime, instructions, servings, recipeImage, videoId, ingredients, ingredient, ingredientGrams]);
 
   function categorySelectedHandler(e) { setCategorySelected(e.target.value); }
   //recipe name
@@ -154,11 +165,14 @@ function RecipeCreatePage() {
                   };
 
                   const getCurrentRecipe = await setRecipeFromDB(newRecipe);
+                  const allRecipes = await getAllRecipesFromDB();
+
                   if(getCurrentRecipe != undefined && getCurrentRecipe.length > 1 && getCurrentRecipe[1] == 'Success') {
-                    toast.current = f7.toast.create({ text: 'Add recipe successfully!', position: 'top', cssClass: 'text-success', closeTimeout: 4000 });
+                    toast.current = f7.toast.create({ text: 'Add recipe successfully!', position: 'top', cssClass: 'text-primary', closeTimeout: 4000 });
                     toast.current.open();
   
-                    store.dispatch('addRecipe', newRecipe);
+                    store.dispatch('addRecipe', getCurrentRecipe);
+                    store.dispatch('addAllRecipes', allRecipes);
                     f7.tab.show('#view-home');
                     //remove all inputs fields after create recipe
                     setCategorySelected('Beef');
@@ -182,6 +196,8 @@ function RecipeCreatePage() {
                     setBtnAddRecipeIsEnable(true);
                     setVideoId('');
                     setIsValidVideoId(true);
+                    setCategoriesRecipe([]);
+                    setSelectIngredients([]);
                     f7.preloader.hide();
                   } else {
                     toast.current = f7.toast.create({ text: 'Create recipe is failed!', position: 'top', cssClass: 'text-danger', closeTimeout: 4000 });
@@ -205,6 +221,33 @@ function RecipeCreatePage() {
     }
   }
 
+
+  function resetCreateFormRecipe(e) {
+    setCategorySelected('Beef');
+    setRecipeName('');
+    setIsValidRecipeName(true);
+    setCalories('');
+    setIsValidCalories(true);
+    setPreparation('');
+    setIsValidPreparation(true);
+    setCookTime('');
+    setIsValidCookTime(true);
+    setInstructions('');
+    setIsValidInstructions(true);
+    setServings(1);
+    setIsValidServings(true);
+    setRecipeImage(null);
+    setIsValidRecipeImage(true);
+    setIngredient(sortableIngredients[0]);
+    setIngredientGrams(0);
+    setIngredients([]);
+    setBtnAddRecipeIsEnable(true);
+    setVideoId('');
+    setIsValidVideoId(true);
+    setCategoriesRecipe([]);
+    setSelectIngredients([]);
+  }
+
   return (
       <Page name='create-recipe' >
         <Navbar title='Create Recipe' className='global-color'/>
@@ -215,8 +258,13 @@ function RecipeCreatePage() {
        
 
         <List outlineIos strongIos >
+            <ListItem large title="Reset all fields" className={`${isDarkMode ? 'background-color-white' : 'background-teal-opacity-2'} global-color`}>
+                <Button fill color='blue' onClick={resetCreateFormRecipe} onTouchStart={resetCreateFormRecipe}>
+                  <GrPowerReset className='margin-right' color='white'/> <span className='color-white'>Reset</span></Button>
+            </ListItem>
+
             <ListInput onChange={categorySelectedHandler} label='Categories' type='select' name='categories' placeholder='Please choose...' color='teal' className='select-box'>
-                {categories && categories.map(c => <option key={c.id} value={c.name} style={{ cursor: 'pointer'}}>{c.name}</option>)}
+                {categoriesRecipe && categoriesRecipe.map(c => <option key={c.id} value={c.name} style={{ cursor: 'pointer'}}>{c.name}</option>)}
             </ListInput>
 
             <ListInput 
@@ -225,7 +273,7 @@ function RecipeCreatePage() {
                 name='name' 
                 type='text' 
                 placeholder='Enter recipe name' 
-                color='teal'
+                color='blue'
                 validate
                 info='Recipe name must be start a capital letter!'
                 className='input-field no-margin'
@@ -240,7 +288,7 @@ function RecipeCreatePage() {
                 type='number'
                 placeholder='Enter recipe calories in Cal'
                 info='The calories are a number in Cal!'
-                color='teal'
+                color='blue'
                 className='input-field no-margin'
                 value={calories}   
                 validate
@@ -254,7 +302,7 @@ function RecipeCreatePage() {
                 name='preparation'
                 type='text'
                 placeholder='Enter recipe preparation in minutes'
-                color='teal'
+                color='blue'
                 validate
                 info='Valid preparation means to enter minutes for the recipe to be prepared, example -> 102 mins'
                 className='input-field no-margin'
@@ -269,7 +317,7 @@ function RecipeCreatePage() {
                 name='cooktime'
                 type='text'
                 placeholder='Enter recipe cook time in minutes'
-                color='teal'
+                color='blue'
                 validate
                 info='Valid cook time means to enter minutes for the recipe to be prepared, example -> 102 mins'
                 className='input-field no-margin'
@@ -283,7 +331,7 @@ function RecipeCreatePage() {
                 label='Preparation instruction is resizeble!' 
                 type='textarea' 
                 placeholder='Enter preparation instruction' 
-                color='teal'
+                color='blue'
                 info='Min length 20 and Max length is 5000 symbils!'
                 value={instructions}
                 maxlength={5000}
@@ -299,7 +347,7 @@ function RecipeCreatePage() {
                 type='number'
                 placeholder='Enter servings'
                 info='The servings is number from 1 to 8!'
-                color='teal'
+                color='blue'
                 className='input-field no-margin'
                 value={servings}   
                 errorMessage='The servings is invalid!'
@@ -308,31 +356,31 @@ function RecipeCreatePage() {
         </List>     
                    
         {/* Images inputs */}
-        <List outlineIos strongIos>
+        <List outlineIos strongIos color='black' className='create-recipe-image-list'>
             <ListInput 
                     onChange={recipeImageHandler}
                     label='Recipe Image' 
                     name='recipeImage' 
                     type='file' 
                     placeholder='Upload Recipe Image' 
-                    color='teal'
+                    color='blue'
                     validate
-                    info='Enter recipe image png or jpg format!'
-                    className='input-field background-teal-opacity-2 no-margin'
+                    info='Enter recipe image png, jpg, jpeg, gif or svg format!'
+                    className={`input-field no-margin color-black ${isDarkMode ? 'background-color-white' : 'background-color-blue'}`}
                     errorMessage='This recipe image format is invalid!'
                     errorMessageForce={isValidRecipeImage ? false : true}
             >
-              <Icon icon='cloud_upload' material='cloud_upload' f7='cloud_upload' slot='media' color='teal' size='40' className='margin-right'/>
+              <Icon icon='cloud_upload' material='cloud_upload' f7='cloud_upload' slot='media' color='blue' size='40' className='margin-right'/>
             </ListInput>
 
-            <div className='padding-left'>Example video Id: "https://www.youtube.com/embed/<span className='global-bold global-color'>TnRcSkusmMg</span>" &lt;- require ID!</div>
+            <div className={`padding-left ${isDarkMode ? 'color-white' : 'color-black'}`}>Example video Id: "https://www.youtube.com/embed/<span className='global-bold global-color'>TnRcSkusmMg</span>" &lt;- require ID!</div>
             <ListInput 
                 onChange={videoIdHandler}
                 label='Recipe Video' 
                 name='video' 
                 type='text' 
                 placeholder='Enter youtube embed ID here...' 
-                color='teal'
+                color='blue'
                 validate
                 info='Recipe video require only ID not url!'
                 className='input-field no-margin'
@@ -343,42 +391,42 @@ function RecipeCreatePage() {
             
         </List>
             
-        <BlockTitle color='teal'>Recipe Ingredients</BlockTitle>
+        <BlockTitle className='global-color'>Recipe Ingredients</BlockTitle>
         {/* Ingredients inputs or select */}
         <List outlineIos dividersIos strong  color='teal' style={{ listStyle: 'none' }} >
             <Block>
 
-              <ListInput onChange={ingredientSelectedHandler} label='Please choose ingredient' type='select' name='ingredients' placeholder='Please choose ingredient' color='teal' >
-                  {sortableIngredients && sortableIngredients.map((el, i) => <option key={i} value={el} style={{ cursor: 'pointer'}}>{el}</option>)}
+              <ListInput onChange={ingredientSelectedHandler} label='Please choose ingredient' type='select' name='ingredients' placeholder='Please choose ingredient' color='blue' >
+                  {selectIngredients && selectIngredients.sort((a, b) => a.localeCompare(b)).map((el, i) => <option key={i} value={el} style={{ cursor: 'pointer'}}>{el}</option>)}
               </ListInput>
-              <BlockTitle color='teal'>Please choose the weight of the ingredient in grams or milliliters.</BlockTitle>
+              <BlockTitle className='global-color'>Please choose the weight of the ingredient in grams or milliliters.</BlockTitle>
               <Col className='padding-horizontal'>
                   <Range min={0} max={1000} label={true} step={25} value={0} 
-                    scale={true} scaleSteps={10} scaleSubSteps={4} color='teal'
+                    scale={true} scaleSteps={10} scaleSubSteps={4} color='blue'
                     onRangeChange={ingredientSelectedGramsHandler}
                   />
               </Col>
             </Block>
 
-            <Block strong className='background-teal-opacity-2'>
+            <Block strong className={`${isDarkMode ? 'background-color-white' : 'background-color-blue'} color-black`}>
               <Row className='display-flex justify-content-end margin-vertical'>
                   <Button 
                     onClick={addIngredient}
-                    color='teal' 
+                    color='blue' 
                     style={{ width: '60px', height: '60px', marginRight: '50px' }}
                   >
-                      <Icon icon='plus_circle_fill' f7='plus_circle_fill' size='60px' color='teal'></Icon>
+                      <Icon icon='plus_circle_fill' f7='plus_circle_fill' size='60px' color='blue'></Icon>
                   </Button>
               </Row>
             </Block>
 
-            <BlockTitle medium color='teal'>Selected Ingredients</BlockTitle>
+            <BlockTitle medium className='global-color'>Selected Ingredients</BlockTitle>
             <List dividersIos simpleList strong outline className='list-ingredients'>
               {ingredients && ingredients.map((el, i) => {
                   const title = `${el.name} ${el.weight}${liquidIngredients.includes(el.name) ? 'ml' : 'g'}`;
                   return <ListItem title={title} key={i} className='background-color-teal'>
                     <Button onClick={(e) => removeIngredient(e, i)}>
-                      <Icon  slot='media' color='black' icon='smark' f7='xmark' style={{ cursor: 'pointer'  }}/>
+                      <Icon  slot='media' color={isDarkMode ? 'white' : 'black'} icon='smark' f7='xmark' style={{ cursor: 'pointer'  }}/>
                     </Button>
                   </ListItem>
                 })
@@ -387,10 +435,12 @@ function RecipeCreatePage() {
 
         </List>
 
-        <Block strong className='background-teal-opacity-2'>
+        <Block strong className={`${isDarkMode ? 'background-color-white' : 'background-teal-opacity-2'}`}>
             <Row className='flex-center-container'>
                 <Col width='75'>
-                  <Button onClick={(e) => recipeSubmit(e)} disabled={btnAddRecipeIsEnable} fill raised color='teal'>Create Recipe</Button>
+                  <Button onClick={(e) => recipeSubmit(e)} onTouchStart={(e) => recipeSubmit(e)} disabled={btnAddRecipeIsEnable} fill raised color='blue'>
+                    <span className='color-white'>Create Recipe</span>
+                  </Button>
                 </Col>
             </Row>
         </Block>

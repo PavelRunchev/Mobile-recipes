@@ -37,7 +37,7 @@
   
   .message-image {
     border-radius: 5px;
-    border: 3px solid #009688;
+    border: 3px solid hsl(206, 85%, 54%);
     -webkit-box-shadow: 0px 0px 7px 0px rgba(0,0,0,0.75);
     -moz-box-shadow: 0px 0px 7px 0px rgba(0,0,0,0.75);
     box-shadow: 0px 0px 7px 0px rgba(0,0,0,0.75);

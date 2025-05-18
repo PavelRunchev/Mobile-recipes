@@ -22,7 +22,8 @@ export default {
         entryFileNames: `assets/[name].js`,
         chunkFileNames: `assets/[name].js`,
         assetFileNames: `assets/[name].[ext]`
-      }
+      },
+      treeshake: false,
     }
   },
   resolve: {

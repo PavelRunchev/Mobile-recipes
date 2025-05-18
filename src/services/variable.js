@@ -20,7 +20,8 @@ export const ingredientsData = [
     'Plums', 'Cheese', 'Parmesan cheese', 'Corn', 'Yogurt', 'Cream', 'Ginger', 'Wine', 'Beer', 'Champagne', 'Parsnips', 'Water', 'Liquid cream',
     'Pumpkin', 'Spice blend', 'Olives', 'Green olives', 'Thyme', 'Chicken thighs', 'Chicken breast', 'Chicken livers', 'Chicken legs', 'Cherry tomatoes', 
     'Red wine', 'Dry red wine', 'White wine', 'Dry white wine', 'Shark fillet', 'Soy sauce', 'Corn flour', 'Spinach', 'Shallot', 'Baby spinach',
-    'lemon juice', 'Lime lemon', 'Red pepper', 'Salmon fillets', 'Salmon', 'Trout', 'Mayonnaise', 'Lettuce'
+    'lemon juice', 'Lime lemon', 'Red pepper', 'Salmon fillets', 'Salmon', 'Trout', 'Mayonnaise', 'Lettuce', 'Cardamom', 'Lamb shanks', 'Bay leaves', 'Basmati rice',
+    'Cumin', 'Chilli powder', 'Parmigiano Reggiano'
 ];
 
 export const liquidIngredients = ['Water', 'Milk', 'Beer', 'Wine', 'Oil', 'Olive oil', 'Champagne', 'Liquid cream', 'Yogurt', 'Red Wine', 

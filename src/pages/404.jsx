@@ -1,6 +1,6 @@
 import React from 'react';
 import { Page, Navbar, Block, LoginScreenTitle, BlockTitle } from 'framework7-react';
-import error404 from '../public/error-404.jpg';
+import error404 from '../public/error-404.png';
 
 const NotFoundPage = () => (
   <Page>

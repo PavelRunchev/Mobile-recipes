@@ -1,10 +1,11 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Page, Navbar, Block, LoginScreenTitle, BlockTitle } from 'framework7-react';
 import error500 from '../public/somthenig-went-wrong.png';
 
 function ErrorBoundary(props) {
     const [error, setError] = useState(null);
+     const toast = useRef(null);
     
     useEffect(() => {
         // Catch errors thrown by child components
@@ -15,6 +16,10 @@ function ErrorBoundary(props) {
     }, [error]);
   
     if (error) {
+        alert('Error: ' + error);
+        toast.current = f7.toast.create({ text: `Error: ${error}`, position: 'top', cssClass: 'text-danger', closeTimeout: 4000 });
+        toast.current.open();
+
         return (
             <Page>
                 <Navbar title="Server Error" backLink="Back" color='teal' className='global-color'/>

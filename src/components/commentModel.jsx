@@ -33,7 +33,7 @@ function CommentModel({ comment, number, currentRecipe }) {
             const success = await removeRecipeMessage(currentRecipe ,id);
             if(success == 'Success') {
                 store.dispatch('removeComment', currentRecipe, id);
-                toast.current = f7.toast.create({ text: 'comment remove successfuly!', position: 'top', cssClass: 'text-success', closeTimeout: 4000 });
+                toast.current = f7.toast.create({ text: 'comment remove successfuly!', position: 'top', cssClass: 'text-primary', closeTimeout: 4000 });
                 toast.current.open();
             }
             f7.preloader.hide();
@@ -50,7 +50,7 @@ function CommentModel({ comment, number, currentRecipe }) {
     
             <CardContent className='card-recipe-comment-inner-container'>
                 <span className='card-recipe-header-container'>
-                    <TbMessageHeart color='teal' size={26}/>
+                    <TbMessageHeart className='global-color' size={26}/>
                     <Block className='fw-bold'>{comment.creator}</Block>
                     <img  slot="media" src={comment.creatorAvatar} width="64" className='comment-image-avatar-icon'/>
                 </span>
@@ -58,13 +58,13 @@ function CommentModel({ comment, number, currentRecipe }) {
                     <p className='recipe-message-content'>{comment.content}</p>
                     <Block className='message-image-container'>
                         {comment.messageImages && comment.messageImages.length > 0 
-                            ? comment.messageImages.map(image => <img slot="media" key={image.id} src={image.imgUrl} width="250" height="200" className='message-image'/>) 
+                            ? comment.messageImages.map(image => <img slot="media" key={image.id} src={image.imgUrl} width="180" height="140" className='message-image'/>) 
                             : null
                         }
                     </Block>
                     
                 </div>
-                {isAdmin && <AiFillCloseSquare color='teal' onClick={(e) => removeComment(e, comment.id)} size={28} className='message-close-icon'/>}
+                {isAdmin && <AiFillCloseSquare onClick={(e) => removeComment(e, comment.id)} onTouchStart={(e) => removeComment(e, comment.id)} size={28} className='message-close-icon global-color'/>}
             </CardContent>
 
             <CardFooter className='recipe-footer'>

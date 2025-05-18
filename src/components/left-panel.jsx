@@ -2,7 +2,8 @@ import React from 'react';
 import '../css/left-panel.css';
 
 import { View, Page, Navbar, Link, BlockTitle, List,ListItem, Panel, useStore, Block, Col, Row } from 'framework7-react';
-import freeRecipeLogo from '../public/Vegan-Hot-Stuff-Enlarged-Logo-png.png';
+import freeRecipeLogo from '../public/best-recipes-logo.png';
+
 
 import { FaScaleBalanced } from "react-icons/fa6";
 import { FaRegCopyright } from "react-icons/fa";
@@ -31,6 +32,7 @@ import { FaUtensils } from "react-icons/fa6";
 import { SiApachecordova } from "react-icons/si";
 
 import Loading from './preloader';
+import loading from '../public/loading.gif';
 
 function LeftPanel({ getRecipesByCategory }) {
     let user = useStore('authUser');
@@ -41,40 +43,40 @@ function LeftPanel({ getRecipesByCategory }) {
 
     function setIconOnCurrentCategoryName(name) {
         if(name == 'Breakfast')
-           return <><FaBurger size={24} className='margin-right' color='teal'/>{name}</>
+           return <><FaBurger size={24} className='margin-right global-color'/>{name}</>
         else if(name == 'Beef')
-            return <><GiCow size={24} className='margin-right' color='teal'/>{name}</>
+            return <><GiCow size={24} className='margin-right global-color'/>{name}</>
         else if(name == 'Chicken')
-            return <><GiChickenOven size={24} className='margin-right' color='teal'/>{name}</>
+            return <><GiChickenOven size={24} className='margin-right global-color'/>{name}</>
         else if(name == 'Desserts')
-            return <><LuDessert size={24} className='margin-right' color='teal'/>{name}</>
+            return <><LuDessert size={24} className='margin-right global-color'/>{name}</>
         else if(name == 'Eggs')
-            return <><FaEgg size={24} className='margin-right' color='teal'/>{name}</>
+            return <><FaEgg size={24} className='margin-right global-color'/>{name}</>
         else if(name == 'Fish')
-            return <><FaFish size={24} className='margin-right' color='teal'/>{name}</>
+            return <><FaFish size={24} className='margin-right global-color'/>{name}</>
         else if(name == 'Lamb')
-            return <><GiSheep size={24} className='margin-right' color='teal'/>{name}</>
+            return <><GiSheep size={24} className='margin-right global-color'/>{name}</>
         else if(name == 'Pigg')
-            return <><GiPig size={24} className='margin-right' color='teal'/>{name}</>
+            return <><GiPig size={24} className='margin-right global-color'/>{name}</>
         else if(name == 'Salad')
-            return <><LuSalad size={24} className='margin-right' color='teal'/>{name}</>
+            return <><LuSalad size={24} className='margin-right global-color'/>{name}</>
         else if(name == 'Sea food')
-            return <><GiOctopus size={24} className='margin-right' color='teal'/>{name}</>
+            return <><GiOctopus size={24} className='margin-right global-color'/>{name}</>
         else if(name == 'Vegetarian')
-            return <><GiFruitBowl size={24} className='margin-right' color='teal'/>{name}</>
+            return <><GiFruitBowl size={24} className='margin-right global-color'/>{name}</>
         else if(name == 'Mushroom')
-            return <><GiMushroom size={24} className='margin-right' color='teal'/>{name}</>
+            return <><GiMushroom size={24} className='margin-right global-color'/>{name}</>
         else if(name == 'Rabbit')
-            return <><GiRabbit size={24} className='margin-right' color='teal'/>{name}</>
+            return <><GiRabbit size={24} className='margin-right global-color'/>{name}</>
         else
-        return <><IoFastFood size={24} className='margin-right' color='teal'/>{name}</>
+        return <><IoFastFood size={24} className='margin-right global-color'/>{name}</>
     }
 
     return (
         <Panel left cover themeGray>
             <View>
                 <Page>
-                    <Navbar className='global-color' title='Categories' subtitle='Recipe'>
+                    <Navbar className='global-color' title='Categories' subtitle='The Best Recipes'>
                         <div className='right'>
                             <Link panelClose className='link-without-underline' color='gray'><MdClose /></Link>
                         </div>
@@ -82,12 +84,12 @@ function LeftPanel({ getRecipesByCategory }) {
 
                     <Block className='my-0'>
                         <Row className='flex-center-container '>
-                            <img  data-src={freeRecipeLogo} className='lazy lazy-fade-in left-panel-image-logo'/>
+                            <img  data-src={freeRecipeLogo} placeholder={loading} className='lazy lazy-fade-in left-panel-image-logo'/>
                         </Row>
                     </Block>
 
                     <BlockTitle medium className='categories-names-container mt-2'>
-                        <FaUtensils size={24} color='teal' className='categories-recipe-icon'/> 
+                        <FaUtensils size={24} className='categories-recipe-icon global-color'/> 
                         &nbsp; <span className='left-panel-title'>All Categories</span>
                     </BlockTitle>
 

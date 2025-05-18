@@ -52,6 +52,8 @@ function recipeUpdatePage({ f7route, f7router }) {
   let categories = useStore('categories');
   let user = useStore('authUser');
   const isAdmin = useStore('userIsAdmin');
+  const isDarkMode = useStore('themeIsDark');
+
 
   useEffect(() => {
       setCategorySelected(currentRecipe.category);
@@ -113,9 +115,15 @@ function recipeUpdatePage({ f7route, f7router }) {
   async function recipeSubmit(e) {
       e.preventDefault();
 
-      console.log(cookTime, currentRecipe.cookTime)
+      if(user.userUID == undefined) {
+        toast.current = f7.toast.create({ text: 'Log in required!', position: 'top', cssClass: 'text-danger', closeTimeout: 4000 });
+        toast.current.open();
+        return;
+      }
 
-      const isUserCredential = currentRecipe.userCreator === user.userUID;
+
+      const isUserCredential = currentRecipe.creatorUID === user.userUID;
+
       if(isUserCredential || isAdmin) {
           try {
               f7.preloader.show();
@@ -154,11 +162,9 @@ function recipeUpdatePage({ f7route, f7router }) {
                   id: currentRecipe.id
               };
 
-              console.log(updateRecipe);
-
               await updateRecipeInDB(updateRecipe);
               store.dispatch('setCurrentRecipe', updateRecipe);
-              toast.current = f7.toast.create({ text: 'Update recipe successfully!', position: 'top', cssClass: 'text-success', closeTimeout: 4000 });
+              toast.current = f7.toast.create({ text: 'Update recipe successfully!', position: 'top', cssClass: 'text-primary', closeTimeout: 4000 });
               toast.current.open();
               f7.tab.show('#view-home');
               f7router.navigate(`/home/`);
@@ -195,8 +201,8 @@ function recipeUpdatePage({ f7route, f7router }) {
   }
 
   return (
-      <Page name='update-recipe' >
-        <Navbar title='Update Recipe' className='admin-color' backLink='Back' color='yellow'/>
+      <Page name='update-recipe'>
+        <Navbar title='Update Recipe' backLink='Back' color={`${isDarkMode ? 'yellow' : 'black'}`} />
 
         <div className='block margin-top mb-5'></div>
         <LoginScreenTitle className='margin-top mb-1'>Update Recipe Form</LoginScreenTitle>
@@ -211,11 +217,11 @@ function recipeUpdatePage({ f7route, f7router }) {
               name='categories' 
               placeholder='Please choose...' 
               color='yellow' 
-              className='update-background-color select-box' 
+              className={`${isDarkMode ? 'background-color-white' : 'background-color-yellow'} ${isDarkMode ? 'color-white' : 'color-black'}`} 
               id='update-form-select'
               defaultValue={currentRecipe.category}
             >
-                {categories && categories.map(c => <option key={c.id} value={c.name}>{c.name}</option>)}
+                {categories && categories.map(c => <option className={`${isDarkMode ? 'color-white' : 'color-black'}`} key={c.id} value={c.name}>{c.name}</option>)}
             </ListInput>
 
             <ListInput 
@@ -342,7 +348,7 @@ function recipeUpdatePage({ f7route, f7router }) {
             
         </List>
             
-        <BlockTitle color='black'>Recipe Ingredients</BlockTitle>
+        <BlockTitle className={`${isDarkMode ? 'color-yellow' : 'color-black'}`}>Recipe Ingredients</BlockTitle>
         {/* Ingredients inputs or select */}
         <List outlineIos dividersIos strong  color='yellow' style={{ listStyle: 'none' }} >
             <Block>
@@ -354,10 +360,11 @@ function recipeUpdatePage({ f7route, f7router }) {
                 name='ingredients' 
                 placeholder='Please choose ingredient' 
                 color='yellow' 
+                id='update-recipe-ingredient-select'
               >
                   {sortableIngredients && sortableIngredients.map((el, i) => <option key={i} value={el} style={{ cursor: 'pointer'}}>{el}</option>)}
               </ListInput>
-              <BlockTitle color='black'>Please choose the weight of the ingredient in grams or milliliters.</BlockTitle>
+              <BlockTitle className={`${isDarkMode ? 'color-yellow' : 'color-black'}`}>Please choose the weight of the ingredient in grams or milliliters.</BlockTitle>
               <Col className='padding-horizontal'>
                   <Range min={0} max={1000} label={true} step={25} value={0} 
                     scale={true} scaleSteps={10} scaleSubSteps={4} color='yellow'
@@ -366,7 +373,7 @@ function recipeUpdatePage({ f7route, f7router }) {
               </Col>
             </Block>
 
-            <Block strong className='update-background-color'>
+            <Block strong className={`${isDarkMode ? 'background-color-white' : 'background-color-yellow'}`}>
               <Row className='display-flex justify-content-end margin-vertical'>
                   <Button 
                     onClick={addIngredient}
@@ -378,13 +385,13 @@ function recipeUpdatePage({ f7route, f7router }) {
               </Row>
             </Block>
 
-            <BlockTitle medium color='black'>Selected Ingredients</BlockTitle>
+            <BlockTitle medium className={`${isDarkMode ? 'color-yellow' : 'color-black'}`}>Selected Ingredients</BlockTitle>
             <List dividersIos simpleList strong outline className='list-ingredients'>
               {ingredients && ingredients.map((el, i) => {
                   const title = `${el.name} ${el.weight}${liquidIngredients.includes(el.name) ? 'ml' : 'g'}`;
-                  return <ListItem title={title} key={i} className='update-background-color'>
-                    <Button onClick={(e) => removeIngredient(e, i)}>
-                      <Icon  slot='media' color='black' icon='smark' f7='xmark' style={{ cursor: 'pointer'  }}/>
+                  return <ListItem title={title} key={i} className={`${isDarkMode ? 'color-yellow' : 'color-black'} ${isDarkMode ? 'background-color-white' : 'background-color-yellow'}`}>
+                    <Button onClick={(e) => removeIngredient(e, i)} onTouchStart={(e) => removeIngredient(e, i)}>
+                      <Icon  slot='media' color={`${isDarkMode ? 'yellow' : 'black'}`} icon='smark' f7='xmark' style={{ cursor: 'pointer'  }}/>
                     </Button>
                   </ListItem>
                 })
@@ -393,10 +400,10 @@ function recipeUpdatePage({ f7route, f7router }) {
 
         </List>
 
-        <Block strong className='update-background-color'>
+        <Block strong className={`${isDarkMode ? 'background-color-white' : 'background-color-yellow'}`}>
             <Row className='flex-center-container'>
                 <Col width='75'>
-                  <Button onClick={(e) => recipeSubmit(e)} fill raised color='yellow' style={{ color: 'black' }}>Save Changes</Button>
+                  <Button onClick={(e) => recipeSubmit(e)} onTouchStart={(e) => recipeSubmit(e)} fill raised className='color-black background-color-yellow-2'>Save Changes</Button>
                 </Col>
             </Row>
         </Block>

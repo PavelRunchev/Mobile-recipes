@@ -1,5 +1,11 @@
 /**
 /* signUp Component*/
+.sign-up-logo-image {
+    display: block;
+    width: 180px;
+    margin: 0px auto;
+}
+
 .item-media, 
 .md .list .item-media,
 .list .item-media {
@@ -61,4 +67,15 @@
   top: 10px;
   right: 10px;
   z-index: 100;
+}
+
+select,
+select > option {
+  padding: 0px 10px !important;
+  background-color: hsla(206, 85%, 54%, 0.10) !important;
+  color: hsl(206, 85%, 54%) !important;
+}
+
+.sign-up-select-gender  {
+  color: white !important;
 }

@@ -7,7 +7,7 @@ import { setCategoryFromDB, removeCategoryByIDFromDB } from '../services/categor
 import { capitalLetter } from '../services/variable';
 import CategoryModel from '../components/categoryModel';
 import Loading from '../components/preloader';
-import categoryImage from '../public/icon-main-meals.png';
+import categoryImage from '../public/recipe-categories-logo.png';
 
 const CategoriesPage = () => {
   const [category, setCategory] = useState('');
@@ -18,6 +18,7 @@ const CategoriesPage = () => {
 
   const categories = useStore('categories');
   const userAuth = useStore('authUser');
+  const isDarkMode = useStore('themeIsDark');
 
   useEffect(() => {
     if(categories) setIsLoading(false);
@@ -42,7 +43,7 @@ const CategoriesPage = () => {
             f7.preloader.show();
             let newCategory = { name: category };
             const currentCategory = await setCategoryFromDB(newCategory);
-            toast.current = f7.toast.create({ text: 'Add category successfully!', position: 'top', cssClass: 'text-success', closeTimeout: 4000 });
+            toast.current = f7.toast.create({ text: 'Add category successfully!', position: 'top', cssClass: 'text-primary', closeTimeout: 4000 });
             toast.current.open();
             store.dispatch('addCategory', currentCategory);
             setCategory('');
@@ -70,16 +71,16 @@ const CategoriesPage = () => {
             f7.preloader.show();
             const result = await removeCategoryByIDFromDB(id);
             if(result == 'delete is success!') {
-              toast.current = f7.toast.create({ text: 'Delete category successfully!', position: 'top', cssClass: 'text-info', closeTimeout: 4000 });
+              toast.current = f7.toast.create({ text: 'Delete category successfully!', position: 'top', cssClass: 'text-primary', closeTimeout: 4000 });
               toast.current.open();
               store.dispatch('removeCategory', id);
               f7.preloader.hide();
             } else {
-              toast.current = f7.toast.create({ text: 'Delete is failed!', position: 'top', cssClass: 'text-info', closeTimeout: 4000 });
+              toast.current = f7.toast.create({ text: 'Delete is failed!', position: 'top', cssClass: 'text-primary', closeTimeout: 4000 });
               toast.current.open();
             }
           } else {
-            toast.current = f7.toast.create({ text: 'Access denied!', position: 'top', cssClass: 'text-info', closeTimeout: 4000 });
+            toast.current = f7.toast.create({ text: 'Access denied!', position: 'top', cssClass: 'text-primary', closeTimeout: 4000 });
             toast.current.open();
           }
       } catch(error) {
@@ -89,16 +90,16 @@ const CategoriesPage = () => {
 
   return (
     <Page name='categories'>
-      <Navbar title='Categories' className='global-color'/>
+      <Navbar title='Categories' className={`${isDarkMode ? 'text-color-white' : 'global-color'}`}/>
 
       <div className='block margin-top mb-5'></div>
-      <LoginScreenTitle className='global-color margin-top mb-1'>All Categories</LoginScreenTitle>
-      <img  data-src={categoryImage} className='lazy lazy-fade-in d-block mx-auto' style={{ width: '100px', height: 'auto' }}/>
+      <LoginScreenTitle className={`margin-top mb-1 ${isDarkMode ? 'text-color-white' : 'global-color'}`}>All Categories</LoginScreenTitle>
+      <img  data-src={categoryImage} placeholder={categoryImage} className='lazy lazy-fade-in d-block mx-auto' style={{ width: '170px', height: '150px', borderRadius: '5px' }}/>
 
       {isLoading ? <Loading /> :
-        <List className='background-teal-opacity-2'> {categories && categories.map((c) => <CategoryModel key={c.id} category={c} removeHandler={removeHandler}/>)} </List>}
+        <List className={`${isDarkMode ? 'background-color-white' : 'background-color-blue'}`}> {categories && categories.map((c) => <CategoryModel key={c.id} category={c} removeHandler={removeHandler}/>)} </List>}
 
-      <LoginScreenTitle className='global-color margin-top mb-5'>Category Form</LoginScreenTitle>
+      <LoginScreenTitle className={`margin-top mb-5 ${isDarkMode ? 'text-color-white' : 'global-color'}`}>Category Form</LoginScreenTitle>
 
         <Block>
             <List strongIos dividersIos insetIos>
@@ -108,7 +109,7 @@ const CategoriesPage = () => {
                   floatingLabel 
                   type='text' 
                   placeholder='Add Category' 
-                  color='teal' 
+                  color='blue' 
                   clearButton 
                   info='First letter must be a capital!'
                   value={category}
@@ -119,9 +120,11 @@ const CategoriesPage = () => {
             </ListInput>
           </List>
     
-            <Row className='flex-center-container background-teal-opacity-2 padding-vertical'>
+            <Row className={`flex-center-container padding-vertical ${isDarkMode ? 'background-color-white' : 'background-color-teal'}`}>
               <Col width='50'>
-                <Button fill onClick={addCategory} disabled={isDisableBtn} color='teal'>Add Category</Button>
+                <Button fill onClick={addCategory} onTouchStart={addCategory} disabled={isDisableBtn} color='blue'>
+                  <span className='color-white'>Add Category</span>
+                </Button>
               </Col>
             </Row>
      

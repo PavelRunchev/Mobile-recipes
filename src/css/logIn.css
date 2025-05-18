@@ -1,13 +1,9 @@
 
 .log-in-logo-image {
   display: block;
-  width: 150px;
+  width: 180px;
   margin: 0px auto;
-}
-
-.log-in-btn-container,
-.other-login-container {
-  background-color: hsla(174, 84%, 32%, 0.15) !important;
+  border-radius: 3px;
 }
 
 .other-account-btn-log-in {
@@ -30,17 +26,19 @@
 
 .forgot-password-image {
     width: 30px;
-    border-radius: 50%;
+    border-radius: 3px;
     margin: 0px 10px;
 }
 
 .forgot-password-link {
   text-decoration: none !important;
   outline: none !important;
-  color: hsl(0, 0%, 0%);
+  color: hsl(206, 85%, 54%) !important;
+  transition: all 0.3s ease-in-out;
+
 }
 
 .forgot-password-link:hover,
 .forgot-password-link:active {
-  color: hsl(174, 84%, 32%) !important;
+  text-decoration: underline !important;
 }

@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import '../css/right-panel.css';
 import { View, Page, Navbar, Link, List, ListItem, Panel, ListInput,
     useStore, Block, f7, Sheet, Toolbar, PageContent, Button, Toggle
@@ -17,7 +17,6 @@ import { MdClose } from "react-icons/md";
 import { AiFillSetting } from "react-icons/ai";
 import { RiMailSettingsLine } from "react-icons/ri";
 import { GrUserSettings } from "react-icons/gr";
-import { MdDinnerDining } from "react-icons/md";
 import { TbSunMoon } from "react-icons/tb";
 import { VscFeedback } from "react-icons/vsc";
 import { FiLogOut } from "react-icons/fi";
@@ -26,6 +25,8 @@ import { LiaUserLockSolid } from "react-icons/lia";
 import { ImCamera } from "react-icons/im";
 import { MdAdminPanelSettings } from "react-icons/md";
 import { FaUtensils } from "react-icons/fa6";
+import { MdOutlineCloudUpload } from "react-icons/md";
+import { AiOutlineCloudUpload } from "react-icons/ai";
 
 function RightPanel(props) {
     //change email
@@ -53,10 +54,15 @@ function RightPanel(props) {
     const [sheetOpened, setSheetOpened] = useState(false);
     
     const toast = useRef(null);
-    //const sheet = useRef(null);
     let user = useStore('authUser');
     const isAdmin = useStore('userIsAdmin');
     const isAuth = useStore('userIsAuth');
+    const isDarkMode = useStore('themeIsDark');
+
+    useEffect(() => {
+        
+    }, []);
+
     //Change Email
     function newEmailHandler(e) { setNewEmail(e.target.value); }
     function requirePasswordForChangeEmailHandler(e) { setPasswordForChangeEmail(e.target.value); }
@@ -77,7 +83,7 @@ function RightPanel(props) {
 
                 //възможно е да направя заявка за новите данни!!! дасе провери
                 store.dispatch('changeUserEmail', newEmail);
-                toast.current = f7.toast.create({ text: 'Update email is successfully!', position: 'top', cssClass: 'text-success', closeTimeout: 4000 });
+                toast.current = f7.toast.create({ text: 'Update email is successfully!', position: 'top', cssClass: 'text-primary', closeTimeout: 4000 });
                 toast.current.open();
                 f7.tab.show('#view-home');
                 f7.preloader.hide();
@@ -108,7 +114,7 @@ function RightPanel(props) {
                 await reauthenticateWithCredential(currUser, credential);
                 //update email authentication
                 await updatePassword(currUser, newPasswordChange);
-                toast.current = f7.toast.create({ text: 'Update password is successfully!', position: 'top', cssClass: 'text-success', closeTimeout: 4000 });
+                toast.current = f7.toast.create({ text: 'Update password is successfully!', position: 'top', cssClass: 'text-primary', closeTimeout: 4000 });
                 toast.current.open();
                 f7.tab.show('#view-home');
                 f7.preloader.hide();
@@ -147,7 +153,7 @@ function RightPanel(props) {
                 };
 
                 await updateUser(updateCurrentUser);
-                toast.current = f7.toast.create({ text: 'Your avatar is change successfully!', position: 'top', cssClass: 'text-success', closeTimeout: 4000 });
+                toast.current = f7.toast.create({ text: 'Your avatar is change successfully!', position: 'top', cssClass: 'text-primary', closeTimeout: 4000 });
                 toast.current.open();
                 store.dispatch('updateUserAvatar', updateCurrentUser);
                 setValidUrl(false);
@@ -183,7 +189,7 @@ function RightPanel(props) {
                 };
 
                 await updateUser(updateCurrentUser);
-                toast.current = f7.toast.create({ text: 'Your avatar is change successfully!', position: 'top', cssClass: 'text-success', closeTimeout: 4000 });
+                toast.current = f7.toast.create({ text: 'Your avatar is change successfully!', position: 'top', cssClass: 'text-primary', closeTimeout: 4000 });
                 toast.current.open();
                
                 await store.dispatch('updateUserAvatar', updateCurrentUser);
@@ -200,50 +206,80 @@ function RightPanel(props) {
         }
     }
 
-    async function uploadAvatarFileFromCameraSubmit(e) {
-            const options =  {
-                quality: 80,
-                destinationType: Camera.DestinationType.FILE_URI,
-                sourceType: Camera.PictureSourceType.CAMERA,
-                encodingType: Camera.EncodingType.JPEG,
-                mediaType: Camera.MediaType.PICTURE,
-                cameraDirection: Camera.Direction.BACK,
-                targetWidth: 300,
-                targetHeight: 400
-            };
+    function uploadAvatarFileFromCameraSubmit(e) {   
+        try {
+            if(navigator.camera) {
 
-            navigator.camera.getPicture(onSuccess, onError, options);
+                navigator.camera.getPicture(onSuccess, onError, {
+                    quality: 60,
+                    destinationType: Camera.DestinationType.FILE_URI,
+                    sourceType: Camera.PictureSourceType.CAMERA,
+                    encodingType: Camera.EncodingType.JPEG,
+                    mediaType: Camera.MediaType.PICTURE,
+                    correctionOrientation: true,
+                    //cameraDirection: Camera.Direction.BACK
+                });
 
-            async function onSuccess(imageData) {
-                try {
-                    const response = await fetch(`data:image/jpeg;base64,${imageData}`);
-                    const blob = await response.blob();
-                    const url = await uploadUserAvatarFromCameraToStorage(blob, user.userUID);
-                    const updateCurrentUser = {
-                        id: user.id,
-                        username: user.username,
-                        email: user.email,
-                        roles: user.roles,
-                        accessToken: user.accessToken,
-                        userUID: user.userUID,
-                        avatar: url[0],
-                        recipes: user.recipes || [],
-                        gender: user.gender
-                    };
-                    await updateUser(updateCurrentUser);
-                    toast.current = f7.toast.create({ text: 'Your avatar is change successfully!', position: 'top', cssClass: 'text-success', closeTimeout: 4000 });
-                    toast.current.open();
-                    await store.dispatch('updateUserAvatar', updateCurrentUser);
-
-                } catch(error) {
-                    console.log(error)
-                }
-            }
-
-            function onError(message) {
-                toast.current = f7.toast.create({ text: `${message}`, position: 'top', cssClass: 'text-danger', closeTimeout: 4000 });
+            } else {
+                toast.current = f7.toast.create({ text: 'Camera is not ready', position: 'top', cssClass: 'text-danger', closeTimeout: 4000 });
                 toast.current.open();
             }
+
+        } catch(error) {
+            alert(error);
+        }
+
+        function onSuccess(imgURI) {
+            try {
+                window.resolveLocalFileSystemURL(imgURI, function success(fileEntry) {
+
+                    fileEntry.file(function (file) {
+                            const reader = new FileReader();
+
+                            reader.onloadend = function () {
+                                const arrayBuffer = reader.result;
+                                const blob = new Blob([arrayBuffer], { type: file.type || 'image/jpeg' || 'image/png' });
+
+                                uploadUserAvatarFromCameraToStorage(blob, user.userUID)
+                                    .then((data) => {
+        
+                                        if(data != undefined && data.length > 0) {
+                                            const updateCurrentUser = {
+                                                id: user.id,
+                                                username: user.username,
+                                                email: user.email,
+                                                roles: user.roles,
+                                                accessToken: user.accessToken,
+                                                userUID: user.userUID,
+                                                avatar: data[0],
+                                                recipes: user.recipes || [],
+                                                gender: user.gender
+                                            };
+                    
+                                            updateUser(updateCurrentUser).then(() => {
+                                                toast.current = f7.toast.create({ text: 'Your avatar is change successfully!', position: 'top', cssClass: 'text-success', closeTimeout: 4000 });
+                                                toast.current.open();
+                                                store.dispatch('updateUserAvatar', updateCurrentUser);
+                                            }).catch(error => console.log(error));
+                                        }
+            
+                                    }).catch(error => console.log(error));
+                            };
+
+                            reader.readAsArrayBuffer(file);
+
+                    }, onError); 
+
+                }, onError);
+
+            } catch(error) {
+                console.log(error);
+            }
+        }
+
+        function onError(message) {
+            console.log('message error ', message);
+        }
     }
 
     function onMyRecipesLink(e) {
@@ -275,7 +311,7 @@ function RightPanel(props) {
 
                 const success = await sendFeedback(newFeedback);
                 if(success == 'Success') {
-                    toast.current = f7.toast.create({ text: 'Send feedback successfully!', position: 'top', cssClass: 'text-success', closeTimeout: 4000 });
+                    toast.current = f7.toast.create({ text: 'Send feedback successfully!', position: 'top', cssClass: 'text-primary', closeTimeout: 4000 });
                     toast.current.open();
 
 
@@ -293,11 +329,6 @@ function RightPanel(props) {
             }
         } 
     }
-  
-    //Log Out
-    // function logOutHandler(e) {
-      
-    // }
 
     //Delete User Account
     function requirePasswordForDeleteUserHandler(e) { setRequirePasswordForDeleteUser(e.target.value); }
@@ -314,7 +345,7 @@ function RightPanel(props) {
                         await signOut(auth);
                         await removeUserFromDB(user.id);
                         await deleteUser(currentUser);
-                        toast.current = f7.toast.create({ text: 'User delete in successfully!', position: 'top', cssClass: 'text-success', closeTimeout: 4000 });
+                        toast.current = f7.toast.create({ text: 'User delete in successfully!', position: 'top', cssClass: 'text-primary', closeTimeout: 4000 });
                         toast.current.open();
                         f7.tab.show('#view-home');
                         f7.preloader.hide();
@@ -339,7 +370,7 @@ function RightPanel(props) {
             <View>
                 <Page >
                     <Navbar title="User Panel">
-                        <div className='left'><AiFillSetting size={24} className='global-color'/></div>
+                        <div className='left'><AiFillSetting size={24} className={`${isDarkMode ? 'text-color-white' : 'global-color'}`}/></div>
                         <div className='right'>
                             <Link panelClose className='link-without-underline' color='gray' ><MdClose /></Link>
                         </div>
@@ -450,13 +481,13 @@ function RightPanel(props) {
                 </Sheet>
 
                  {/* Change Avatar */}
-                 <Sheet opened={sheetOpened4} onSheetClosed={() => { setSheetOpened4(false); }}>
+                 <Sheet opened={sheetOpened4} onSheetClosed={() => { setSheetOpened4(false); }} >
                     <Toolbar>
                         <div className="left"></div>
                         <div className="right"><Link sheetClose color='gray' >Close</Link></div>
                     </Toolbar>
    
-                    <PageContent className='change-email-container'>
+                    <PageContent className='change-email-container pb-5'>
                         
                         <div className='flex-around-container'>
                             <div className='form-column-container'>
@@ -485,7 +516,7 @@ function RightPanel(props) {
                                         disabled={validUrl}
                                         className='color-white'
                                     >
-                                        change avatar
+                                        <AiOutlineCloudUpload size={22}/>&nbsp; Change Avatar
                                     </Button>
                                 </List>
                             </div>
@@ -516,22 +547,30 @@ function RightPanel(props) {
                                         disabled={isValidAvatarFile}
                                         className='color-white'
                                     >
-                                        Upload File
+                                        <MdOutlineCloudUpload size={22}/>&nbsp; Upload File
                                     </Button>
                                 </List>
                             </div>
 
                             <div className='form-column-camera-container'>
-                                <div className='text-center'>Image from Camera!</div>
+                                <div className='text-center'>Take a picture from the camera!</div>
                                 <List strongIos dividersIos insetIos className='form-list'>
-                                    
+                                    <ListInput 
+                                        label='Camera' 
+                                        placeholder='Take a picture from the camera'                       
+                                        info='Open Phone Camera!'
+                                        className='input-field no-margin'
+                                        disabled
+                                        >
+                                        </ListInput>
                                     <Button 
                                         onClick={uploadAvatarFileFromCameraSubmit}
                                         onTouchStart={uploadAvatarFileFromCameraSubmit}
+                                        on fill raised color='black'
                                     >
-                                        <ImCamera color='black' size={40} className='avatar-user-camera-btn'/>
+                                        <ImCamera color='white' size={18} className='avatar-user-camera-btn'/>
+                                        &nbsp;&nbsp; &nbsp;<span className='color-white'>Open Camera</span>
                                     </Button>
-
                                 </List>
                             </div>
                         </div>
@@ -597,6 +636,7 @@ function RightPanel(props) {
                                         on fill raised color='black'
                                         panelClose="right"
                                         sheetClose
+                                        className='color-white'
                                     >
                                         Validation Password
                                     </Button>
